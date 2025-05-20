@@ -16,7 +16,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // Route untuk logout (biasanya menggunakan POST untuk keamanan)
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Contoh route untuk halaman setelah login (TANPA middleware 'auth')
+// Route untuk halaman setelah login (TANPA middleware 'auth')
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');

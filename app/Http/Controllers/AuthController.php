@@ -32,7 +32,7 @@ class AuthController extends Controller
             // Autentikasi berhasil
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard'); //Apakah saya perlu membuat halaman dashboard atau membuat route dashboard?
+            return redirect()->intended('dashboard');
             
             // Redirect ke halaman dashboard atau halaman yang diinginkan setelah login
         }
