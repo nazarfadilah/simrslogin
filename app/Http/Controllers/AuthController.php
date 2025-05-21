@@ -32,9 +32,8 @@ class AuthController extends Controller
             // Autentikasi berhasil
             $request->session()->regenerate();
 
-            return redirect()->intended('dashboard');
-            
-            // Redirect ke halaman dashboard atau halaman yang diinginkan setelah login
+            // Redirect ke route dengan name 'dashboard'
+            return redirect()->route('dashboard');
         }
 
         // Autentikasi gagal
