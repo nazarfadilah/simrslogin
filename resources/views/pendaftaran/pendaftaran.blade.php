@@ -129,83 +129,113 @@
                     </tr>
                 </thead>
                 <tbody>
+                @php $no = 1; @endphp
+                @foreach($pendaftarans as $pendaftaran)
                     <tr>
-                        <td>1</td>
-                        <td>001</td>
-                        <td>Andi Pratama</td>
-                        <td>Mata</td>
-                        <td>dr. Indah Permata, Sp.PD</td>
-                        <td>1</td>
-                        <td class="status-menunggu">Menunggu</td>
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $pendaftaran->no_registrasi }}</td>
+                        <td>{{ $pendaftaran->pasien->nama ?? '-' }}</td>
+                        <td>{{ $pendaftaran->poli->nama_poli ?? '-' }}</td>
+                        <td>{{ $pendaftaran->dokter->nama_dokter ?? '-' }}</td>
+                        <td>{{ $pendaftaran->no_antrian }}</td>
+                        <td class="status-{{ strtolower($pendaftaran->status) }}">
+                            {{ ucfirst($pendaftaran->status) }}
+                        </td>
                         <td class="aksi">
-                            <img src="{{ asset('css/image/eye.svg') }}" alt="Lihat Detail" onclick="openDetailModal()">
+                            <img src="{{ asset('css/image/eye.svg') }}" alt="Lihat Detail"
+                                 onclick="openDetailModal('{{ $pendaftaran->no_registrasi }}')">
                         </td>
                     </tr>
-
-
-                    <!-- Modal Detail -->
-                    <!-- Overlay Modal -->
-                    <div class="modal-overlay" id="modalDetail">
-                        <div class="modal-box">
-                            <div class="modal-header">
-                                <h3>Detail Pendaftaran</h3>
-                                <span class="close-btn" onclick="closeDetailModal()">&times;</span>
-                            </div>
-
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="no_regis">No. Regis</label>
-                                    <input type="text" id="no_regis" value="0001" disabled
-                                        style="font-weight: 600;">
-                                </div>
-                                <div class="form-group">
-                                    <label for="rekam_medis">Rekam Medis</label>
-                                    <input type="text" id="rekam_medis" value="001" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="no_antrian">No Antrian</label>
-                                    <input type="text" id="no_antrian" value="1" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="namaPasien">Nama Pasien</label>
-                                    <input type="text" id="namaPasien" value="Andi Pratama" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nik">NIK</label>
-                                    <input type="text" id="nik" value="65432146786890" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="tanggal">Tanggal</label>
-                                    <input type="text" id="tanggal" value="25 April 2025" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="poli">Poli Tujuan</label>
-                                    <input type="text" id="poli" value="Mata" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="dokter">Dokter</label>
-                                    <input type="text" id="dokter" value="dr. Indah Permata, Sp.PD" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="waktu">Waktu Praktek</label>
-                                    <input type="text" id="waktu" value="09.00 - 12.00" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="status">Status</label>
-                                    <input type="text" id="status" value="Menunggu" disabled>
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button class="btn-cancel">Batalkan</button>
-                                <button class="btn-print">
-                                    <img src="{{ asset('css/image/printer.svg') }}" alt="">Cetak
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                @endforeach
                 </tbody>
             </table>
+
+            <!-- Modal Detail (gunakan 1 modal, isi dengan JS sesuai baris yang diklik) -->
+            <div class="modal-overlay" id="modalDetail" style="display:none;">
+                <div class="modal-box">
+                    <div class="modal-header">
+                        <h3>Detail Pendaftaran</h3>
+                        <span class="close-btn" onclick="closeDetailModal()">&times;</span>
+                    </div>
+                    <div class="modal-body" id="modalDetailBody">
+                        <!-- Isi detail akan diisi oleh JS -->
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-cancel">Batalkan</button>
+                        <button class="btn-print">
+                            <img src="{{ asset('css/image/printer.svg') }}" alt="">Cetak
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // Data pendaftaran untuk modal detail
+                const pendaftaranData = @json($pendaftarans);
+
+                function openDetailModal(no_registrasi) {
+                    const data = pendaftaranData.find(item => item.no_registrasi === no_registrasi);
+                    if (!data) return;
+
+                    // Relasi: pasien, poli, dokter
+                    let pasien = data.pasien ? data.pasien.nama : '-';
+                    let rekam_medis = data.rekam_medis || '-';
+                    let nik = data.pasien ? data.pasien.nik : '-';
+                    let tanggal = data.tgl_kunjungan ? new Date(data.tgl_kunjungan).toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' }) : '-';
+                    let poli = data.poli ? data.poli.nama_poli : '-';
+                    let dokter = data.dokter ? data.dokter.nama_dokter : '-';
+                    let waktu = data.dokter ? (data.dokter.jam_praktek ?? '-') : '-';
+                    let status = data.status ? data.status.charAt(0).toUpperCase() + data.status.slice(1) : '-';
+                    let no_antrian = data.no_antrian || '-';
+
+                    document.getElementById('modalDetailBody').innerHTML = `
+                        <div class="form-group">
+                            <label for="no_regis">No. Regis</label>
+                            <input type="text" id="no_regis" value="${data.no_registrasi}" disabled style="font-weight: 600;">
+                        </div>
+                        <div class="form-group">
+                            <label for="rekam_medis">Rekam Medis</label>
+                            <input type="text" id="rekam_medis" value="${rekam_medis}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="no_antrian">No Antrian</label>
+                            <input type="text" id="no_antrian" value="${no_antrian}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="namaPasien">Nama Pasien</label>
+                            <input type="text" id="namaPasien" value="${pasien}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="nik">NIK</label>
+                            <input type="text" id="nik" value="${nik}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="tanggal">Tanggal</label>
+                            <input type="text" id="tanggal" value="${tanggal}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="poli">Poli Tujuan</label>
+                            <input type="text" id="poli" value="${poli}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="dokter">Dokter</label>
+                            <input type="text" id="dokter" value="${dokter}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="waktu">Waktu Praktek</label>
+                            <input type="text" id="waktu" value="${waktu}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <input type="text" id="status" value="${status}" disabled>
+                        </div>
+                    `;
+                    document.getElementById('modalDetail').style.display = "flex";
+                }
+                function closeDetailModal() {
+                    document.getElementById('modalDetail').style.display = "none";
+                }
+            </script>
             <div class="pagination-wrapper">
                 <div class="pagination-center">Halaman 1/1</div>
                 <a href="#" class="pagination-next"><img src="{{ asset('css/image/hal-lanjut.svg') }}" alt=""></a>

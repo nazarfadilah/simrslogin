@@ -13,4 +13,12 @@ class PasienController extends Controller
         $pasien = Pasien::all();
         return view('pasien.pasien', compact('pasien'));
     }
+    public function tambah()
+    {
+        return view('pasien.tambah_pasien');
+    }
+    public function edit()
+    {
+        return view ('pasien.edit_pasien');
+    }
 }

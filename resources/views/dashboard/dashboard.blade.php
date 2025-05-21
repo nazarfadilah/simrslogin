@@ -66,7 +66,7 @@ use Carbon\Carbon;
                 <ul class="sub-menu">
                     <li><a href="#" class="link_name">Layanan</a></li>
                     <li><a href="{{ url('poli') }}">Poli</a></li>
-                    <li><a href="#">Dokter</a></li>
+                    <li><a href="{{ url('dokter') }}">Dokter</a></li>
                 </ul>
             </li>
 
@@ -100,7 +100,7 @@ use Carbon\Carbon;
             <!-- Popup (gambar 2) -->
             <div id="profile-popup" class="profile-popup hidden">
                 <div class="popup-content">
-                    <img src="image/admin.svg" alt="User" class="popup-icon">
+                    <img src="{{ asset('css/image/admin.svg') }}" alt="User" class="popup-icon">
                     <div>
                         <div class="popup-name">
                             <?php
@@ -138,21 +138,20 @@ use Carbon\Carbon;
                 </div>
                 <div class="box-2">
                     <h4>Pendaftaran</h4>
-<h4 class="jumlah">{{ $count }}</h4>
-</div>
-<div class="arrow">
-    <a href="{{ url('pendaftaran') }}"><img src="{{ asset('css/image/arrow-right.svg') }}" alt=""></a>
-</div>
-</div>
-<div class="card-2">
-    <div class="icon-case">
-        <img src="{{ asset('css/image/icon-pasien.png') }}" alt="icon-pasien">
-    </div>
-    <div class="box-2">
-        <h4>Pasien</h4>
-        <h4 class="jumlah">{{ $countPasien }}</h4>
-</div>
-
+                        <h4 class="jumlah">{{ $count }}</h4>
+                        </div>
+                        <div class="arrow">
+                            <a href="{{ url('pendaftaran') }}"><img src="{{ asset('css/image/arrow-right.svg') }}" alt=""></a>
+                        </div>
+                        </div>
+                        <div class="card-2">
+                            <div class="icon-case">
+                                <img src="{{ asset('css/image/icon-pasien.png') }}" alt="icon-pasien">
+                            </div>
+                            <div class="box-2">
+                                <h4>Pasien</h4>
+                                <h4 class="jumlah">{{ $countPasien }}</h4>
+                        </div>
                 <div class="arrow">
                     <a href="{{ url('pasien') }}"><img src="{{ asset('css/image/arrow-right.svg') }}" alt=""></a>
                 </div>

@@ -5,55 +5,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beranda</title>
-    <link rel="stylesheet" href="{{ asset('css/style/style-pendaftaran_tambah.css') }}">
+    <link rel="stylesheet" href="{{ asset ('css/style/style-pasien_tambah.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
     <div class="sidebar">
         <div class="logo-details">
-            <img src="{{ asset('css/image/logo.svg') }}" alt="Logo RS">
+            <img src="{{ asset ('css/image/logo.svg') }}" alt="Logo RS">
             <span class="logo_name">
                 <h5>RUMAH SAKIT ISLAM<br>BANJARMASIN</h5>
             </span>
         </div>
         <ul class="nav-links">
             <li>
-                <a href="{{ route('dashboard') }}">
-                    <img src="{{ asset('css/image/beranda.svg') }}" alt="Beranda">
+                <a href="{{ route ('dashboard') }}">
+                    <img src="{{ asset ('css/image/beranda.svg') }}" alt="Beranda">
                     <span class="link_name">Beranda</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a href="{{ route('dashboard') }}" class="link_name">Beranda</a></li>
+                    <li><a href="{{ route ('dashboard') }}" class="link_name">Beranda</a></li>
                 </ul>
             </li>
             <li>
                 <div class="icon-link">
-                    <a href="{{ route('pendaftaran') }}">
-                        <img src="{{ asset('css/image/kunjungan.svg') }}" alt="Kunjungan">
+                    <a href="{{ route ('pendaftaran') }}">
+                        <img src="{{ asset ('css/image/kunjungan.svg') }}" alt="Kunjungan">
                         <span class="link_name">Pendaftaran</span>
                     </a>
                     <i class='bx bx-chevron-down arrow'></i>
                 </div>
                 <ul class="sub-menu">
                     <li><a href="#" class="link_name">Pendaftaran</a></li>
-                    <li><a href="{{ route('pendaftaran') }}">Pendaftaran Hari Ini</a></li>
-                    <li><a href="{{ route('riwayat_pendaftaran') }}">Riwayat Pendaftaran</a></li>
+                    <li><a href="{{ route ('pendaftaran') }}">Pendaftaran Hari Ini</a></li>
+                    <li><a href="{{ route ('riwayat_pendaftaran') }}">Riwayat Pendaftaran</a></li>
                 </ul>
             </li>
             <li>
-                <a href="{{ route('pasien') }}">
-                    <img src="{{ asset('css/image/pasien.svg') }}" alt="Pasien">
+                <a href="{{ route ('pasien') }}">
+                    <img src="{{ asset ('css/image/pasien.svg') }}" alt="Pasien">
                     <span class="link_name">Pasien</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a href="{{ route('pasien') }}" class="link_name">Pasien</a></li>
+                    <li><a href="{{ route ('pasien') }}" class="link_name">Pasien</a></li>
                 </ul>
             </li>
             <li>
                 <div class="icon-link">
                     <a href="{{ route ('poli') }}">
-                        <img src="{{ asset('css/image/kunjungan.svg') }}" alt="Layanan">
+                        <img src="{{ asset ('css/image/kunjungan.svg') }}" alt="Layanan">
                         <span class="link_name">Layanan</span>
                     </a>
                     <i class='bx bx-chevron-down arrow'></i>
@@ -61,12 +61,12 @@
                 <ul class="sub-menu">
                     <li><a href="#" class="link_name">Layanan</a></li>
                     <li><a href="{{ route ('poli') }}">Poli</a></li>
-                    <li><a href="{{ route ('dokter')}}">Dokter</a></li>
+                    <li><a href="{{ route ('dokter') }}">Dokter</a></li>
                 </ul>
             </li>
             <li class="logout">
                 <a href="{{ route ('logout') }}" class="keluar">
-                    <img src="{{  asset ('css/image/keluar.svg') }}" alt="Keluar">
+                    <img src="{{ asset('css/image/keluar.svg') }}" alt="Keluar">
                     <span class="link_name">Keluar</span>
                 </a>
                 <ul class="sub-menu blank">
@@ -75,6 +75,7 @@
             </li>
         </ul>
     </div>
+
     <section class="home-section">
         <div class="home-content">
             <i class='bx bx-menu'></i>
@@ -97,57 +98,81 @@
     </section>
     <main>
         <div class="main-content">
-            <a href="index-pendaftaran.html" class="sub">Pendaftaran Hari Ini</a>
+            <a href="{{ route ('pasien') }}" class="sub">Data Pasien</a>
+            <i class='sub-1 bx bx-chevron-right'></i>
+            <a href="{{ route ('pasien') }}" class="sub">Detail</a>
             <i class='bx bx-chevron-right'></i>
-            <a href="index-pendaftaran_tambah.html" class="sub-link">Tambah Pendaftaran</a>
+            <a href="{{ route ('edit_pasien') }}" class="sub-link">Edit</a>
         </div>
         <div class="card">
             <form action="#" id="kunjunganForm">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="rekam_medis">Rekam Medis</label>
-                        <input type="text" id="rekam_medis" placeholder="Cari">
+                        <label>Rekam Medis</label>
+                        <input type="text" value="00001" />
                     </div>
                     <div class="form-group">
-                        <label for="poli">Poli Tujuan</label>
-                        <select id="poli">
-                            <option>-- Pilih Poli --</option>
-                            <option value="mata">Mata</option>
-                            <option value="gigi">Gigi</option>
-                            <option value="umum">Umum</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="namaPasien">Nama Pasien</label>
-                        <input type="text" id="namaPasien">
-                    </div>
-                    <div class="form-group">
-                        <label for="dokter">Dokter</label>
-                        <select id="dokter">
-                            <option>-- Pilih Dokter --</option>
-                            <option value="mata">dr. Indah Permata, Sp.PD</option>
-                            <option value="gigi">dr. Andi Wijaya, Sp.PD</option>
-                            <option value="umum">dr. Bella Sp.PD</option>
-                        </select>
+                        <label>NIK</label>
+                        <input type="text" value="65432146786890">
                     </div>
 
                     <div class="form-group">
-                        <label for="nik">NIK</label>
-                        <input type="text" id="nik">
+                        <label>Nama Pasien</label>
+                        <input type="text" value="Andi Pratama" />
                     </div>
                     <div class="form-group">
-                        <label for="waktu">Waktu Praktek</label>
-                        <input type="time" id="waktu">
+                        <label>Jenis Kelamin</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="jenis_kelamin" value="Laki-laki" checked> Laki-laki</label>
+                            <label><input type="radio" name="jenis_kelamin" value="Perempuan"> Perempuan</label>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label for="tanggal">Tanggal</label>
-                        <input type="date" id="tanggal">
+                        <label>Tempat Lahir</label>
+                        <input type="text" value="Banjarmasin" />
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Lahir</label>
+                        <input type="date" value="1979-06-28" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Nomor Hp</label>
+                        <input type="text" value="08123456789" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="Andi1979@gmail.com" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Golongan Darah</label>
+                        <select name="gol_darah">
+                            <option value="">-- Pilih --</option>
+                            <option value="A">A</option>
+                            <option value="B" selected>B</option>
+                            <option value="AB">AB</option>
+                            <option value="O">O</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat</label>
+                        <textarea>Jl. Pramuka</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="">-- Pilih --</option>
+                            <option value="Aktif" selected>Aktif</option>
+                            <option value="Tidak Aktif">Tidak Aktif</option>
+                        </select>
                     </div>
 
                     <div class="form-actions full-width">
-                        <button type="reset" class="btn btn-secondary">Hapus</button>
-                        <button type="submit" class="btn btn-primary">Tambah</button>
+                        <a href="index-pasien_detail.html" class="btn-1 btn-secondary">Kembali</a>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>
             </form>
@@ -155,9 +180,9 @@
 
         <div id="popup" class="popup">
             <div class="popup-tambah">
-                <div class="checkmark"><img src="{{ asset ('css/image/centang.svg')}}" alt=""></div>
+                <div class="checkmark"><img src="{{ asset('css/image/centang.svg') }}" alt=""></div>
                 <h3>Sukses</h3>
-                <p>Pendaftaran berhasil ditambahkan</p>
+                <p>Data pasien berhasil ditambahkan</p>
             </div>
         </div>
     </main>
@@ -216,8 +241,6 @@
                 popup.style.display = 'none';
             }, 3000);
         }
-
-
     </script>
 </body>
 

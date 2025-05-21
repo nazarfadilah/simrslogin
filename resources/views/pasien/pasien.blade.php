@@ -99,6 +99,7 @@
         <div class="main-content">
             <h3>Data Pasien</h3>
             <a href="index-pasien_tambah.html" class="add-btn">
+            <a href="{{ route('tambah_pasien') }}" class="add-btn">
                 Tambah <i class='bx bxs-plus-circle'></i>
             </a>
 
@@ -137,6 +138,7 @@
                         <td class="status">Aktif</td>
                         <td>
                             <a href="index-pasien_detail.html"><img src="image/eye.svg" alt="" class="aksi"></a>
+                            <a href="{{ route ('edit_pasien') }}"><img src="{{ asset ('css/image/eye.svg')}}" alt="" class="aksi"></a>
                         </td>
                     </tr>
                 </tbody>
