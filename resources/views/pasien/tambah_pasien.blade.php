@@ -102,70 +102,102 @@
             <a href="{{ route ('tambah_pasien') }}" class="sub-link">Tambah Pasien</a>
         </div>
         <div class="card">
-            <form action="#" id="kunjunganForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="namaPasien">Nama Pasien</label>
-                        <input type="text" id="namaPasien">
-                    </div>
-                    <div class="form-group">
-                        <label for="nik">NIK</label>
-                        <input type="text" id="nik">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Jenis Kelamin</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="jenis_kelamin" value="Laki-laki"> Laki-laki</label>
-                            <label><input type="radio" name="jenis_kelamin" value="Perempuan"> Perempuan</label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Golongan Darah</label>
-                        <select name="gol_darah">
-                            <option value="">-- Pilih --</option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="AB">AB</option>
-                            <option value="O">O</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tempat Lahir</label>
-                        <input type="text" name="tempat_lahir">
-                    </div>
-                    <div class="form-group">
-                        <label>Tanggal Lahir</label>
-                        <input type="date" name="tanggal_lahir">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Nomor Hp</label>
-                        <input type="text" name="no_hp">
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" name="email">
-                    </div>
-
-                    <div class="form-group full-width">
-                        <label for="alamat">Alamat</label>
-                        <textarea id="alamat" rows="2"></textarea>
-                    </div>
-                    <div class="form-actions full-width">
-                        <a href="{{ route ('pasien') }}" class="btn-1 btn-secondary">Batal</a>
-                        <button type="submit" class="btn btn-primary">Tambah</button>
-                    </div>
+            <form id="kunjunganForm">
+            <div class="form-grid">
+                <div class="form-group">
+                <label for="rekamMedis">No. Rekam Medis</label>
+                <input type="text" id="rekamMedis" name="rekam_medis" maxlength="255" required>
                 </div>
+                <div class="form-group">
+                <label for="nik">NIK</label>
+                <input type="text" id="nik" name="nik" maxlength="16">
+                </div>
+                <div class="form-group">
+                <label for="namaPasien">Nama Pasien</label>
+                <input type="text" id="namaPasien" name="nama_pasien" required>
+                </div>
+                <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="jk" value="L"> Laki-laki</label>
+                    <label><input type="radio" name="jk" value="P"> Perempuan</label>
+                </div>
+                </div>
+                <div class="form-group">
+                <label for="tglLahir">Tanggal Lahir</label>
+                <input type="date" id="tglLahir" name="tgl_lahir">
+                </div>
+                <div class="form-group">
+                <label for="noHp">Nomor Hp</label>
+                <input type="text" id="noHp" name="no_hp">
+                </div>
+                <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email">
+                </div>
+                <div class="form-group full-width">
+                <label for="alamat">Alamat</label>
+                <textarea id="alamat" name="alamat" rows="2"></textarea>
+                </div>
+                <div class="form-actions full-width">
+                <a href="{{ route ('pasien') }}" class="btn-1 btn-secondary">Batal</a>
+                <button type="submit" class="btn btn-primary">Tambah</button>
+                </div>
+            </div>
             </form>
+
+            <script>
+            document.getElementById('kunjunganForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const data = {
+                rekam_medis: document.getElementById('rekamMedis').value,
+                nik: document.getElementById('nik').value,
+                nama_pasien: document.getElementById('namaPasien').value,
+                tgl_lahir: document.getElementById('tglLahir').value,
+                jk: document.querySelector('input[name="jk"]:checked') ? document.querySelector('input[name="jk"]:checked').value : null,
+                alamat: document.getElementById('alamat').value,
+                no_hp: document.getElementById('noHp').value,
+                email: document.getElementById('email').value,
+            };
+
+            try {
+                const response = await fetch('/api/pasiens', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                showPopup();
+                this.reset();
+                } else {
+                const error = await response.json();
+                alert('Gagal menambah pasien: ' + (error.message || 'Cek data Anda!'));
+                }
+            } catch (err) {
+                alert('Terjadi kesalahan jaringan.');
+            }
+            });
+
+            
+            document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('popup').addEventListener('click', function () {
+                window.location.href = "{{ route('pasien') }}";
+            });
+            });
+            </script>
         </div>
 
-        <div id="popup" class="popup">
+        <div id="popup" class="popup" style="cursor:pointer;">
             <div class="popup-tambah">
-                <div class="checkmark"><img src="{{ asset ('css/image/centang.svg') }}" alt=""></div>
-                <h3>Sukses</h3>
-                <p>Data pasien berhasil ditambahkan</p>
+            <div class="checkmark"><img src="{{ asset ('css/image/centang.svg') }}" alt=""></div>
+            <h3>Sukses</h3>
+            <p>Data pasien berhasil ditambahkan</p>
             </div>
         </div>
     </main>

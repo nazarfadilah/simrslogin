@@ -105,91 +105,133 @@
             <a href="{{ route ('edit_pasien') }}" class="sub-link">Edit</a>
         </div>
         <div class="card">
-            <form action="#" id="kunjunganForm">
+            <form action="#" id="editPasienForm">
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Rekam Medis</label>
-                        <input type="text" value="00001" />
+                        <input type="text" name="rekam_medis" id="rekam_medis" readonly style="background-color: #f0f0f0; cursor: not-allowed;" tabindex="-1" />
                     </div>
                     <div class="form-group">
                         <label>NIK</label>
-                        <input type="text" value="65432146786890">
+                        <input type="text" name="nik" id="nik" maxlength="16" />
                     </div>
-
                     <div class="form-group">
                         <label>Nama Pasien</label>
-                        <input type="text" value="Andi Pratama" />
+                        <input type="text" name="nama_pasien" id="nama_pasien" />
                     </div>
                     <div class="form-group">
                         <label>Jenis Kelamin</label>
                         <div class="radio-group">
-                            <label><input type="radio" name="jenis_kelamin" value="Laki-laki" checked> Laki-laki</label>
-                            <label><input type="radio" name="jenis_kelamin" value="Perempuan"> Perempuan</label>
+                            <label><input type="radio" name="jk" value="L" id="jk_l"> Laki-laki</label>
+                            <label><input type="radio" name="jk" value="P" id="jk_p"> Perempuan</label>
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label>Tempat Lahir</label>
-                        <input type="text" value="Banjarmasin" />
+                        <input type="text" name="tempat_lahir" id="tempat_lahir" />
                     </div>
                     <div class="form-group">
                         <label>Tanggal Lahir</label>
-                        <input type="date" value="1979-06-28" />
+                        <input type="date" name="tgl_lahir" id="tgl_lahir" />
                     </div>
-
                     <div class="form-group">
                         <label>Nomor Hp</label>
-                        <input type="text" value="08123456789" />
+                        <input type="text" name="no_hp" id="no_hp" />
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" value="Andi1979@gmail.com" />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Golongan Darah</label>
-                        <select name="gol_darah">
-                            <option value="">-- Pilih --</option>
-                            <option value="A">A</option>
-                            <option value="B" selected>B</option>
-                            <option value="AB">AB</option>
-                            <option value="O">O</option>
-                        </select>
+                        <input type="email" name="email" id="email" />
                     </div>
                     <div class="form-group">
                         <label>Alamat</label>
-                        <textarea>Jl. Pramuka</textarea>
+                        <textarea name="alamat" id="alamat"></textarea>
                     </div>
-
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select name="status">
-                            <option value="">-- Pilih --</option>
-                            <option value="Aktif" selected>Aktif</option>
-                            <option value="Tidak Aktif">Tidak Aktif</option>
-                        </select>
-                    </div>
-
                     <div class="form-actions full-width">
-                        <a href="index-pasien_detail.html" class="btn-1 btn-secondary">Kembali</a>
+                        <a href="{{ route('pasien') }}" class="btn-1 btn-secondary">Kembali</a>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>
             </form>
+
+            <script>
+                // Ganti dengan rekam_medis pasien yang diedit, misal dari route atau variabel blade
+                const rekamMedisId = "{{ $pasien->rekam_medis ?? '' }}";
+
+                // Fetch data pasien
+                fetch(`/api/pasiens/${rekamMedisId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('rekam_medis').value = data.rekam_medis || '';
+                        document.getElementById('nik').value = data.nik || '';
+                        document.getElementById('nama_pasien').value = data.nama_pasien || '';
+                        document.getElementById('tgl_lahir').value = data.tgl_lahir || '';
+                        document.getElementById('alamat').value = data.alamat || '';
+                        document.getElementById('no_hp').value = data.no_hp || '';
+                        document.getElementById('email').value = data.email || '';
+                        document.getElementById('tempat_lahir').value = data.tempat_lahir || '';
+                        if (data.jk === 'L') {
+                            document.getElementById('jk_l').checked = true;
+                        } else if (data.jk === 'P') {
+                            document.getElementById('jk_p').checked = true;
+                        }
+                    });
+
+                // Submit update
+                document.getElementById('editPasienForm').addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = {
+                        rekam_medis: document.getElementById('rekam_medis').value,
+                        nik: document.getElementById('nik').value,
+                        nama_pasien: document.getElementById('nama_pasien').value,
+                        tgl_lahir: document.getElementById('tgl_lahir').value,
+                        alamat: document.getElementById('alamat').value,
+                        no_hp: document.getElementById('no_hp').value,
+                        email: document.getElementById('email').value,
+                        jk: document.querySelector('input[name="jk"]:checked')?.value || '',
+                        tempat_lahir: document.getElementById('tempat_lahir').value,
+                    };
+
+                    fetch(`/api/pasiens/${rekamMedisId}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            showPopup();
+                        } else {
+                            alert('Gagal menyimpan data');
+                        }
+                    });
+                });
+            </script>
         </div>
 
         <div id="popup" class="popup">
             <div class="popup-tambah">
                 <div class="checkmark"><img src="{{ asset('css/image/centang.svg') }}" alt=""></div>
                 <h3>Sukses</h3>
-                <p>Data pasien berhasil ditambahkan</p>
+                <p>Data pasien berhasil diperbarui</p>
             </div>
         </div>
     </main>
 
 
     <script>
+    function showPopup() {
+        const popup = document.getElementById('popup');
+        popup.style.display = 'flex'; // atau 'block' sesuai styling popup
 
+        setTimeout(() => {
+            popup.style.display = 'none';
+            window.location.href = "{{ route('pasien') }}"; // redirect ke halaman pasien
+        }, 2000); // 2 detik delay sebelum kembali
+    }
         let arrow = document.querySelectorAll(".arrow");
         for (var i = 0; i < arrow.length; i++) {
             arrow[i].addEventListener("click", (e) => {

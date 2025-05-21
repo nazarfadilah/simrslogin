@@ -127,20 +127,33 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @forelse($pasien as $index => $item)
                     <tr>
-                        <td>1</td>
-                        <td>00001</td>
-                        <td>Andi Pratama</td>
-                        <td>65432146786890</td>
-                        <td>Laki-laki</td>
-                        <td>28-06-1979</td>
-                        <td>08123456789</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $item->rekam_medis }}</td>
+                        <td>{{ $item->nama_pasien }}</td>
+                        <td>{{ $item->nik }}</td>
+                        <td>
+                            @if($item->jk == 'L')
+                                Laki-laki
+                            @elseif($item->jk == 'P')
+                                Perempuan
+                            @else
+                                -
+                            @endif
+                        </td>
+                        <td>{{ $item->tgl_lahir ? \Carbon\Carbon::parse($item->tgl_lahir)->format('d-m-Y') : '-' }}</td>
+                        <td>{{ $item->no_hp ?? '-' }}</td>
                         <td class="status">Aktif</td>
                         <td>
-                            <a href="index-pasien_detail.html"><img src="image/eye.svg" alt="" class="aksi"></a>
-                            <a href="{{ route ('edit_pasien') }}"><img src="{{ asset ('css/image/eye.svg')}}" alt="" class="aksi"></a>
+                            <a href="{{ route('edit_pasien', $item->rekam_medis) }}"><img src="{{ asset('css/image/eye.svg')}}" alt="" class="aksi"></a>
                         </td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" style="text-align:center;">Data tidak ditemukan</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
             <div class="pagination-wrapper">

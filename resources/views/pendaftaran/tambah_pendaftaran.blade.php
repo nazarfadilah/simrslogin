@@ -104,14 +104,48 @@
         <div class="card">
             <form action="#" id="kunjunganForm">
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="rekam_medis">Rekam Medis</label>
-                        <input type="text" id="rekam_medis" name="rekam_medis" placeholder="Cari" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="namaPasien">Nama Pasien</label>
-                        <input type="text" id="namaPasien" name="nama_pasien" readonly>
-                    </div>
+                    <!-- Input Rekam Medis -->
+<div class="form-group">
+    <label for="rekam_medis">Rekam Medis</label>
+    <input type="text" id="rekam_medis" name="rekam_medis" class="form-control">
+</div>
+
+<!-- Input Nama Pasien (readonly) -->
+<div class="form-group">
+    <label for="nama_pasien">Nama Pasien</label>
+    <input type="text" id="nama_pasien" name="nama_pasien" class="form-control" readonly>
+</div>
+
+<!-- Input NIK (readonly) -->
+
+
+<!-- Tambahkan jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $('#rekam_medis').on('change', function () {
+        let rekam_medis = $(this).val();
+
+        if (rekam_medis) {
+            $.ajax({
+                url: '/api/pasiens/' + rekam_medis,
+                method: 'GET',
+                success: function(response) {
+                    $('#nama_pasien').val(response.nama);
+                    $('#nik').val(response.nik);
+                },
+                error: function() {
+                    $('#nama_pasien').val('');
+                    $('#nik').val('');
+                    alert('Data pasien tidak ditemukan!');
+                }
+            });
+        } else {
+            $('#nama_pasien').val('');
+            $('#nik').val('');
+        }
+    });
+</script>
+
                     <div class="form-group">
                         <label for="poli">Poli Tujuan</label>
                         <select id="poli" name="id_poli" required>
@@ -129,9 +163,9 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="nik">NIK</label>
-                        <input type="text" id="nik" name="nik" readonly>
-                    </div>
+    <label for="nik">NIK</label>
+    <input type="text" id="nik" name="nik" class="form-control" readonly>
+</div>
                     <div class="form-group">
                         <label for="waktu">Waktu Praktek</label>
                         <input type="time" id="waktu" name="waktu" required>

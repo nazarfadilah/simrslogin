@@ -19,6 +19,7 @@ class Pasien extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     
+    
     protected $fillable = [
         'rekam_medis',
         'nik',

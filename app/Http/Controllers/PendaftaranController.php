@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\Pendaftaran;
+use App\Models\Dokter;
+use App\Models\Poli;
+use App\Models\Pasien;
 
 use Illuminate\Http\Request;
 
@@ -19,7 +22,10 @@ class PendaftaranController extends Controller
         return view('pendaftaran.riwayat_pendaftaran', compact('riwayatPendaftaran'));
     }
     public function create()
-    {
-        return view('pendaftaran.tambah_pendaftaran');
-    }
+{
+    $polis = Poli::all();
+    $dokters = Dokter::all();
+
+    return view('pendaftaran.tambah_pendaftaran', compact('polis', 'dokters'));
+}
 }
