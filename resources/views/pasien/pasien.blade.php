@@ -146,7 +146,10 @@
                         <td>{{ $item->no_hp ?? '-' }}</td>
                         <td class="status">Aktif</td>
                         <td>
-                            <a href="{{ route('edit_pasien', $item->rekam_medis) }}"><img src="{{ asset('css/image/eye.svg')}}" alt="" class="aksi"></a>
+                            <a href="{{ route('edit_pasien', ['rekam_medis' => $item->rekam_medis]) }}">
+    <img src="{{ asset('css/image/eye.svg') }}" alt="" class="aksi">
+</a>
+
                         </td>
                     </tr>
                     @empty

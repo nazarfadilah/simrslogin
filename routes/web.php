@@ -38,6 +38,7 @@ Route::get('/tambah_pasien', [PasienController::class, 'tambah'])->name('tambah_
 Route::get('/edit_pasien', [PasienController::class, 'edit'])->name('edit_pasien');
 
 
+
 // Poli
 Route::get('/poli', [PoliController::class, 'index'])->name('poli');
 
