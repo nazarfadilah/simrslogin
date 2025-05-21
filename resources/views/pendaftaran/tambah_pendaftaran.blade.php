@@ -97,60 +97,120 @@
     </section>
     <main>
         <div class="main-content">
-            <a href="index-pendaftaran.html" class="sub">Pendaftaran Hari Ini</a>
+            <a href="{{ route ('pendaftaran')}}" class="sub">Pendaftaran Hari Ini</a>
             <i class='bx bx-chevron-right'></i>
-            <a href="index-pendaftaran_tambah.html" class="sub-link">Tambah Pendaftaran</a>
+            <a href="{{ route ('tambah_pendaftaran')}}" class="sub-link">Tambah Pendaftaran</a>
         </div>
         <div class="card">
             <form action="#" id="kunjunganForm">
                 <div class="form-grid">
                     <div class="form-group">
                         <label for="rekam_medis">Rekam Medis</label>
-                        <input type="text" id="rekam_medis" placeholder="Cari">
-                    </div>
-                    <div class="form-group">
-                        <label for="poli">Poli Tujuan</label>
-                        <select id="poli">
-                            <option>-- Pilih Poli --</option>
-                            <option value="mata">Mata</option>
-                            <option value="gigi">Gigi</option>
-                            <option value="umum">Umum</option>
-                        </select>
+                        <input type="text" id="rekam_medis" name="rekam_medis" placeholder="Cari" required>
                     </div>
                     <div class="form-group">
                         <label for="namaPasien">Nama Pasien</label>
-                        <input type="text" id="namaPasien">
+                        <input type="text" id="namaPasien" name="nama_pasien" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="poli">Poli Tujuan</label>
+                        <select id="poli" name="id_poli" required>
+                            <option value="">-- Pilih Poli --</option>
+                            @foreach($polis as $poli)
+                                <option value="{{ $poli->id_poli }}">{{ $poli->nama_poli }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="dokter">Dokter</label>
-                        <select id="dokter">
-                            <option>-- Pilih Dokter --</option>
-                            <option value="mata">dr. Indah Permata, Sp.PD</option>
-                            <option value="gigi">dr. Andi Wijaya, Sp.PD</option>
-                            <option value="umum">dr. Bella Sp.PD</option>
+                        <select id="dokter" name="id_dokter" required>
+                            <option value="">-- Pilih Dokter --</option>
+                            <!-- Akan diisi via JS sesuai poli -->
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label for="nik">NIK</label>
-                        <input type="text" id="nik">
+                        <input type="text" id="nik" name="nik" readonly>
                     </div>
                     <div class="form-group">
                         <label for="waktu">Waktu Praktek</label>
-                        <input type="time" id="waktu">
+                        <input type="time" id="waktu" name="waktu" required>
                     </div>
-
                     <div class="form-group">
                         <label for="tanggal">Tanggal</label>
-                        <input type="date" id="tanggal">
+                        <input type="date" id="tanggal" name="tanggal" required>
                     </div>
-
                     <div class="form-actions full-width">
                         <button type="reset" class="btn btn-secondary">Hapus</button>
                         <button type="submit" class="btn btn-primary">Tambah</button>
                     </div>
                 </div>
             </form>
+
+            <script>
+                // Ambil data poli dan dokter dari backend (pastikan $dokters tersedia di blade)
+                const dokters = @json($dokters);
+
+                // Filter dokter sesuai poli
+                document.getElementById('poli').addEventListener('change', function() {
+                    const poliId = this.value;
+                    const dokterSelect = document.getElementById('dokter');
+                    dokterSelect.innerHTML = '<option value="">-- Pilih Dokter --</option>';
+                    dokters.filter(d => d.id_poli == poliId).forEach(dokter => {
+                        dokterSelect.innerHTML += `<option value="${dokter.id_dokter}">${dokter.nama_dokter}</option>`;
+                    });
+                });
+
+                // Ambil data pasien otomatis berdasarkan rekam medis (gunakan API)
+                document.getElementById('rekam_medis').addEventListener('blur', function() {
+                    const rekamMedis = this.value;
+                    if(rekamMedis) {
+                        fetch(`/api/pasiens/${rekamMedis}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                document.getElementById('namaPasien').value = data.nama_pasien || '';
+                                document.getElementById('nik').value = data.nik || '';
+                            })
+                            .catch(() => {
+                                document.getElementById('namaPasien').value = '';
+                                document.getElementById('nik').value = '';
+                            });
+                    }
+                });
+
+                // Submit form ke API
+                document.getElementById('kunjunganForm').addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const form = e.target;
+                    const data = {
+                        rekam_medis: form.rekam_medis.value,
+                        id_poli: form.id_poli.value,
+                        id_dokter: form.id_dokter.value,
+                        tgl_kunjungan: form.tanggal.value + ' ' + form.waktu.value + ':00',
+                        // status otomatis 'menunggu' di backend
+                    };
+                    fetch('/api/pendaftarans', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(res => {
+                        if(res.ok) {
+                            showPopup();
+                            form.reset();
+                        } else {
+                            return res.json().then(err => Promise.reject(err));
+                        }
+                    })
+                    .catch(err => {
+                        alert('Gagal menambah pendaftaran!');
+                    });
+                });
+            </script>
         </div>
 
         <div id="popup" class="popup">
